@@ -17,6 +17,15 @@ class Fluxctl < Formula
   def install
     cd buildpath/"cmd/fluxctl" do
       system "go", "build", "-ldflags", "-s -w -X main.version=#{version}", "-trimpath", "-o", bin/"fluxctl"
+      
+      # Install bash completion
+      output = Utils.popen_read("#{bin}/fluxctl completion bash")
+      (bash_completion/"fluxctl").write output
+
+      # Install zsh completion
+      output = Utils.popen_read("#{bin}/fluxctl completion zsh")
+      (zsh_completion/"_fluxctl").write output
+      
       prefix.install_metafiles
     end
   end
